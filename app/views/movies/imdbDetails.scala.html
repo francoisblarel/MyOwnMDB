@@ -1,18 +1,16 @@
-@(movies : Seq[MovieIMDB])
+@(movie : MovieIMDB)
 
 <div id="imdbInfos">
         <dl>
-            @for(movie <- movies){
-                <img src="@movie.poster"/>
-                <dt>@movie.duration</dt>
-                <dt>@movie.id</dt>
-                <dt><a href="@movie.imdbUrl">lien</a></dt>
-                <dt>@movie.directors</dt>
-                <dt>@movie.actors</dt>
-                <dt>@movie.year</dt>
-                <dt>@movie.writer</dt>
-                <dt>@movie.plot</dt>
-            }
+            <img src="@movie.poster"/>
+            <dt>@movie.duration</dt>
+            <dt>@movie.id</dt>
+            <dt><a href="@movie.imdbUrl">lien</a></dt>
+            <dt>@movie.directors</dt>
+            <dt>@movie.actors</dt>
+            <dt>@movie.year</dt>
+            <dt>@movie.writer</dt>
+            <dt>@movie.plot</dt>
         </dl>
 </div>
 

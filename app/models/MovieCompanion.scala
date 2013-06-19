@@ -14,15 +14,18 @@ case class Movie(title : String,
                  categories : Option[Seq[Categorie]],
                  imdbId : Option[Integer])
 
-case class MovieIMDB(duration : Seq[String],
+case class MovieIMDB(title : String,
+                     duration : Option[Seq[String]],
                      poster : Option[String],
                      imdbUrl : String,
-                     directors : Seq[String],
+                     directors : Option[Seq[String]],
                      writer : Option[Seq[String]],
                      id : String,
                      actors : Option[Seq[String]],
                      plot : Option[String],
-                     year : Long)
+                     year : Option[Long],
+                     otherTitles : Option[Seq[String]])
+
 
 /**
  * User: fblarel

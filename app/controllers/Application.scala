@@ -5,38 +5,27 @@ import play.api.mvc._
 import scala.io.Source
 import play.api.libs.iteratee.{Enumeratee, Enumerator, Iteratee}
 import scala.concurrent._
-import play.api.libs.concurrent.Promise
 import play.api.libs.json._
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.functional.syntax._
 import play.api.libs.ws.WS
-import ExecutionContext.Implicits.global
-
 import models.{MovieIMDB, MovieCompanion, Categorie, Movie}
 import org.joda.time.Duration
+import java.net.{URLEncoder}
+
 
 object Application extends Controller {
-
-
-  def lineEnumerator(source: Source) : Enumerator[String] = {
-    val lines = source.getLines()
-
-    Enumerator.fromCallback1[String] ( _ => {
-      val line = if (lines.hasNext) {
-        Some(lines.next())
-      } else {
-        None
-      }
-      Future.successful(line)
-    })
-  }
 
 
   def index = Action { implicit request =>
     Redirect(routes.Application.list())
   }
 
+
+  /**
+   * Retourne les films qui sont en BDD
+   */
   def list = Action{ implicit request =>
     val movies = MovieCompanion.findAll()
     println(movies)
@@ -44,32 +33,48 @@ object Application extends Controller {
   }
 
 
+  /**
+   * Récupère en BDD les données d'un film
+   * @param title le titre du film a retrouver.
+   */
   def show(title : String) = Action { implicit request =>
     MovieCompanion.find(title).map(mov =>
       Ok(views.html.movies.details(mov))
     ).getOrElse(NotFound)
   }
 
+
+  /**
+   * A partir d'un titre de film, récupère les infos dans IMDB
+   * @param title  le titre du film
+   */
   def showFromIMDB(title : String) = Action{
-
-
     /*
    Voir API IMDB : http://mymovieapi.com/
    http://mymovieapi.com/?title=Drive&type=json&plot=simple&episode=0&limit=2&yg=0&mt=M&lang=en-US&offset=&aka=simple&release=simple&business=0&tech=0
    */
-        val url : String = """http://mymovieapi.com/?title=""" + title +"""&type=json&plot=simple&episode=0&limit=2&yg=0&mt=M&lang=en-US&offset=&aka=simple&release=simple&business=0&tech=0"""
-        val movies : Future[Seq[MovieIMDB]]= WS.url(url)
-                    .get()
-                    .map(r => {
-                      println(r.status + " : " + r.json)
-                      r.json.as[Seq[MovieIMDB]]
-                      }
-                    ).recover{
-                      case e : Exception =>{
-                        println("BOOM : " + e.getMessage() + ", cause : "+e.getCause + " \nexception " + e)
-                        Seq()
-                      }
+      println("recherche de : " + title)
+
+      val url : String = """http://mymovieapi.com/?title=""" + URLEncoder.encode(title, "UTF-8") +"""&type=json&plot=simple&episode=0&limit=2&yg=0&mt=M&lang=en-US&offset=&aka=simple&release=simple&business=0&tech=0"""
+      println("URL : " + url)
+      val movies : Future[Option[MovieIMDB]]= WS.url(url)
+                  .get()
+                  .map(r => {
+                    println(r.status + " : " + r.json)
+                    // TODO : a refactorer : ligne qui fait mal au crâne!
+                    r.json.as[Seq[MovieIMDB]].find(m =>
+                      m.title.toLowerCase == title.toLowerCase
+                        || ( if(m.otherTitles.isDefined)
+                                {m.otherTitles.get.exists(_.toLowerCase()==title.toLowerCase())} else false
+                            )
+                      )
                     }
+                  ).recover{
+                    case e : Exception =>{
+                      println("BOOM : " + e.getMessage() + ", cause : "+e.getCause + " \nexception " + e)
+                      None
+                    }
+                  }
 
     // Humanis proxy compliant : on simule une requête qui dure 3sec
 //    val fut : Future[String] = Promise.timeout(
@@ -90,7 +95,7 @@ object Application extends Controller {
 //    }
 
     Async{
-      movies.map(mylist  => Ok(views.html.movies.imdbDetails(mylist)))
+        movies.map(x => Ok(views.html.movies.imdbDetails(x.get)))
     }
 
   }
@@ -101,19 +106,40 @@ object Application extends Controller {
     )
 
   implicit val movieIMDBRead : Reads[MovieIMDB] = (
-      ( __ \ "runtime").read[Seq[String]] and
+      ( __ \ "title").read[String] and
+      ( __ \ "runtime").readNullable[Seq[String]] and
       ( __ \ "poster").readNullable[String] and
       ( __ \ "imdb_url").read[String] and
-      ( __ \ "directors").read[Seq[String]] and
+      ( __ \ "directors").readNullable[Seq[String]] and
       ( __ \ "writers").readNullable[Seq[String]] and
       ( __ \ "imdb_id").read[String] and
       ( __ \ "actors").readNullable[Seq[String]] and
       ( __ \ "plot_simple").readNullable[String] and
-      ( __ \ "year").read[Long]
+      ( __ \ "year").readNullable[Long] and
+      ( __ \ "also_known_as").readNullable[Seq[String]]
     )(MovieIMDB)
 
 
+  /**
+   *
+   * Parse les lignes du fichier, et récupère les données des films si possible pour les sauvegarder en BDD
+   */
   def charge() = Action{
+
+    //  Lit une source ligne par ligne
+    def lineEnumerator(source: Source) : Enumerator[String] = {
+      val lines = source.getLines()
+
+      Enumerator.fromCallback1[String] ( _ => {
+        val line = if (lines.hasNext) {
+          Some(lines.next())
+        } else {
+          None
+        }
+        Future.successful(line)
+      })
+    }
+
     val file = Source.fromFile(Play.getExistingFile("public/files/movies.txt").get)
 
     val lineParser : Enumeratee[String, Option[Movie]] = Enumeratee.map(line =>
