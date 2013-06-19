@@ -58,7 +58,7 @@ object Application extends Controller {
    http://mymovieapi.com/?title=Drive&type=json&plot=simple&episode=0&limit=2&yg=0&mt=M&lang=en-US&offset=&aka=simple&release=simple&business=0&tech=0
    */
         val url : String = """http://mymovieapi.com/?title=""" + title +"""&type=json&plot=simple&episode=0&limit=2&yg=0&mt=M&lang=en-US&offset=&aka=simple&release=simple&business=0&tech=0"""
-        val movies = WS.url(url)
+        val movies : Future[Seq[MovieIMDB]]= WS.url(url)
                     .get()
                     .map(r => {
                       println(r.status + " : " + r.json)
@@ -67,10 +67,11 @@ object Application extends Controller {
                     ).recover{
                       case e : Exception =>{
                         println("BOOM : " + e.getMessage() + ", cause : "+e.getCause + " \nexception " + e)
+                        Seq()
                       }
                     }
 
-    // Humanis compliant : on simule une requête qui dure 3sec
+    // Humanis proxy compliant : on simule une requête qui dure 3sec
 //    val fut : Future[String] = Promise.timeout(
 //
 //    """[{"runtime":["104 min","Argentina: 99 min","Germany: 94 min","USA: 85 min (R-rated version)","USA: 97 min (unrated version)","Germany: 80 min (FSK 16 version)","Finland: 92 min (cut version) (1992) (1993)","South Korea: 85 min (heavily cut)","Spain: 99 min (DVD edition)"],"rating":7.6,"genres":["Comedy","Horror"],"rated":"UNRATED","language":["English","Spanish"],"title":"Braindead","filming_locations":"Karori Cemetery, Karori, Wellington, New Zealand","poster":"http://ia.media-imdb.com/images/M/MV5BMTcwMzY5MTYxNF5BMl5BanBnXkFtZTYwOTUwOTc4._V1._SY317_CR5,0,214,317_.jpg","imdb_url":"http://www.imdb.com/title/tt0103873/","writers":["Stephen Sinclair","Stephen Sinclair"],"imdb_id":"tt0103873","directors":["Peter Jackson"],"rating_count":52263,"actors":["Timothy Balme","Diana Peñalver","Elizabeth Moody","Ian Watkin","Brenda Kendall","Stuart Devenie","Jed Brophy","Stephen Papps","Murray Keane","Glenis Levestam","Lewis Rowe","Elizabeth Mulfaxe","Harry Sinclair","Davina Whitehouse","Silvio Famularo"],"plot_simple":"A young man's mother is bitten by a Sumatran rat-monkey. She gets sick and dies, at which time she comes back to life, killing and eating dogs, nurses, friends, and neighbors.","year":1992,"country":["New Zealand"],"type":"M","release_date":19930212,"also_known_as":["Dead Alive"]},{"rating":6.7,"genres":["Short"],"language":["English"],"title":"Braindead","country":["USA"],"imdb_url":"http://www.imdb.com/title/tt0319103/","imdb_id":"tt0319103","directors":["Jon Moritsugu"],"rating_count":1270,"year":1987,"runtime":["1 min"],"type":"M"}]"""
@@ -89,7 +90,7 @@ object Application extends Controller {
 //    }
 
     Async{
-      movies.map(mov => Ok(mov.toString))
+      movies.map(mylist  => Ok(views.html.movies.imdbDetails(mylist)))
     }
 
   }
