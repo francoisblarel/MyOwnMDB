@@ -1,0 +1,16 @@
+@(movies : List[Movie], message: String)(implicit req: RequestHeader)
+
+@main("Welcome to Play 2.1") {
+    
+   <div>
+       <button id="charge">Charge from CSV</button>
+
+       <ul id="movies">
+           @for(movie <- movies){
+               <li>@movie.title</li>
+           }
+       </ul>
+
+   </div>
+
+}

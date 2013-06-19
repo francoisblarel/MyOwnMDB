@@ -1,0 +1,6 @@
+drive;Nicholas Winding-Refn;Ryan Gosling;2012;100;action;
+7 samurais;Akira Kurosawa;Toshiro Mifune;1954;240;chambara;
+The big Lebowski;directeur;;1998;100;comedy;
+The big Combo;;;1950;100;film noir;
+The big Heat;;;1950;100;d;
+The big Heat2;;;1950;100;d;

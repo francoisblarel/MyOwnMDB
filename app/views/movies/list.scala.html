@@ -1,0 +1,26 @@
+@(movies : List[Movie], message: String)(implicit req: RequestHeader)
+
+@main("My Own MDB") {
+
+
+    <button id="charge">Charge from CSV</button>
+
+    <div>
+        <dl id="movies">
+        @for(movie <- movies){
+            <dt><a href="@routes.Application.show(movie.title)">
+                @movie.title
+                </a>
+            </dt>
+        }
+        </dl>
+    </div>
+
+    <div>
+        <a>
+            <i class="icon-plus"></i>
+            Ajouter un nouveau titre
+        </a>
+    </div>
+
+}

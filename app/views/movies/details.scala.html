@@ -1,0 +1,24 @@
+@(movie : Movie)(implicit req: RequestHeader)
+
+@main("My Own MDB") {
+
+<div>
+    <div>titre : @movie.title</div>
+    <dl>
+        <dt>année : @movie.year</dt>
+        <dt>directeur : @movie.director</dt>
+        <dt>acteurs : @movie.actors</dt>
+        <dt>durée : @movie.duration</dt>
+        <dt>cat : @movie.categories</dt>
+    </dl>
+
+    <div id="imdbInfos"></div>
+</div>
+
+    <script type="text/javascript">
+        $.get("/movies/imdbinfo/@movie.title", function(data) {
+            $('#imdbInfos').html(data);
+        });
+    </script>
+
+}

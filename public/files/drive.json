@@ -1,0 +1,47 @@
+[
+    {
+        "runtime": ["113 min", "Spain: 110 min (cut version)"],
+        "rating": 8.5,
+        "genres": ["Crime", "Drama"],
+        "rated": "R",
+        "language": ["English", "Spanish"],
+        "title": "Taxi Driver",
+        "filming_locations": "13 St between 2nd &amp; 3rd Avenues, Manhattan, New York City, New York, USA",
+        "poster": "http://ia.media-imdb.com/images/M/MV5BMTQ1Nzg3MDQwN15BMl5BanBnXkFtZTcwNDE2NDU2MQ@@._V1._SY317_CR9,0,214,317_.jpg",
+        "imdb_url": "http://www.imdb.com/title/tt0075314/",
+        "writers": ["Paul Schrader"],
+        "imdb_id": "tt0075314",
+        "directors": ["Martin Scorsese"],
+        "rating_count": 265826,
+        "actors": ["Diahnne Abbott", "Frank Adu", "Victor Argo", "Gino Ardito", "Garth Avery", "Peter Boyle", "Albert Brooks", "Harry Cohn", "Copper Cunningham", "Robert De Niro", "Brenda Dickson", "Harry Fischler", "Jodie Foster", "Nat Grant", "Leonard Harris"],
+        "plot_simple": "A mentally unstable Vietnam war veteran works as a nighttime taxi driver in New York City where the perceived decadence and sleaze feeds his urge to violently lash out, attempting to save a teenage prostitute in the process.",
+        "year": 1976,
+        "country": ["USA"],
+        "type": "M",
+        "release_date": 19760208,
+        "also_known_as": ["\\u039f \\u03a4\\u03b1\\u03be\\u03b9\\u03c4\\u03b6\\u03ae\\u03c2"]
+    },
+
+    {
+        "runtime": ["100 min"],
+        "rating": 7.9,
+        "genres": ["Crime", "Drama"],
+        "rated": "R",
+        "language": ["English"],
+        "title": "Drive",
+        "filming_locations": "Saugus Speedway - 22500 Soledad Canyon Road, Saugus, California, USA",
+        "poster": "http://ia.media-imdb.com/images/M/MV5BOTM1ODQ0Nzc4NF5BMl5BanBnXkFtZTcwMTM0MjQyNg@@._V1._SY317_.jpg",
+        "imdb_url": "http://www.imdb.com/title/tt0780504/",
+        "writers": ["Hossein Amini", "James Sallis"],
+        "imdb_id": "tt0780504",
+        "directors": ["Nicolas Winding Refn"],
+        "rating_count": 237433,
+        "actors": ["Ryan Gosling", "Carey Mulligan", "Bryan Cranston", "Albert Brooks", "Oscar Isaac", "Christina Hendricks", "Ron Perlman", "Kaden Leos", "Jeff Wolfe", "James Biberi", "Russ Tamblyn", "Joe Bucaro III", "Tiara Parker", "Tim Trella", "Jim Hart"],
+        "plot_simple": "A mysterious Hollywood stuntman, mechanic and getaway driver lands himself in trouble when he helps out his neighbour.",
+        "year": 2011,
+        "country": ["USA"],
+        "type": "M",
+        "release_date": 20110916,
+        "also_known_as": ["\\u0158idi\\u010d"]
+    }
+]
