@@ -4,6 +4,12 @@
 
 # Home page
 GET     /                           controllers.Application.index
+
+#   authentication
+GET     /login                      controllers.LoginController.login
+POST    /login                      controllers.LoginController.doLogin
+
+#   movies list
 GET     /movies                     controllers.Application.list
 GET     /charge                     controllers.Application.charge
 GET     /movies/:title              controllers.Application.show(title : String)

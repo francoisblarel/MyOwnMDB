@@ -1,0 +1,20 @@
+@(loginForm : Form[User])(implicit lang : Lang, flash : Flash, req: RequestHeader)
+
+
+@main("Login"){
+
+    <div id="log form">
+    @helper.form(action = routes.LoginController.doLogin()){
+        <div id="username">
+        @helper.inputText(loginForm("login"))
+        </div>
+        <div id="password">
+        @helper.inputPassword(loginForm("password"))
+        </div>
+        <p>
+            <input type="submit" value="Login" class="btn-primary"/>
+        </p>
+    }
+    </div>
+
+}

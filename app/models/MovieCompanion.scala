@@ -1,6 +1,7 @@
 package models
 
 import Categorie._
+import MovieFormat._
 import play.api.libs.functional.syntax._
 import org.joda.time.{Duration, DateTime}
 import play.api.libs.json.Reads._
@@ -12,7 +13,8 @@ case class Movie(title : String,
                  year : Option[Integer],
                  duration : Option[Duration],
                  categories : Option[Seq[Categorie]],
-                 imdbId : Option[Integer])
+                 imdbId : Option[Integer],
+                 typeMovie : Option[MovieFormat])
 
 case class MovieIMDB(title : String,
                      duration : Option[Seq[String]],
@@ -34,9 +36,9 @@ case class MovieIMDB(title : String,
 object MovieCompanion {
 
   var myMovies = Set(
-            Movie("Braindead", Some(Seq("Peter Jackson")), Some(Seq("actors")), Some(1990), Some(Duration.standardMinutes(90)), Some(Seq(Comedy, Horror)), None),
-            Movie("Il était une fois dans l'ouest", Some(Seq("Sergio Leone")), Some(Seq("Charles Bronson")), Some(1980), Some(Duration.standardMinutes(180)), Some(Seq(Western)), None),
-            Movie("Pulp Fiction", Some(Seq("Quentin Tarantino")), Some(Seq("Samuel L. Jackson, Uma Thurman, Bruce Willis ")), Some(1994), Some(Duration.standardMinutes(180)), Some(Seq(Action)), None)
+            Movie("Braindead", Some(Seq("Peter Jackson")), Some(Seq("actors")), Some(1990), Some(Duration.standardMinutes(90)), Some(Seq(Comedy, Horror)), None, Some(AVI)),
+            Movie("Il était une fois dans l'ouest", Some(Seq("Sergio Leone")), Some(Seq("Charles Bronson")), Some(1980), Some(Duration.standardMinutes(180)), Some(Seq(Western)), None, Some(DVD)),
+            Movie("Pulp Fiction", Some(Seq("Quentin Tarantino")), Some(Seq("Samuel L. Jackson, Uma Thurman, Bruce Willis ")), Some(1994), Some(Duration.standardMinutes(180)), Some(Seq(Action)), None, Some(BLURAY))
                     )
 
 

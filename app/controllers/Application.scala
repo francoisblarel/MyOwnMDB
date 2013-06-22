@@ -15,18 +15,18 @@ import org.joda.time.Duration
 import java.net.{URLEncoder}
 
 
-object Application extends Controller {
+object Application extends Controller with SecurityTrait {
 
 
-  def index = Action { implicit request =>
+  def index = isAuthenticated {username =>  implicit request =>
     Redirect(routes.Application.list())
   }
 
 
   /**
-   * Retourne les films qui sont en BDD
+   * Retourne la liste des films qui sont en BDD
    */
-  def list = Action{ implicit request =>
+  def list = isAuthenticated {username => implicit request =>
     val movies = MovieCompanion.findAll()
     println(movies)
     Ok(views.html.movies.list(movies, "Your new application is ready."))
@@ -37,7 +37,7 @@ object Application extends Controller {
    * Récupère en BDD les données d'un film
    * @param title le titre du film a retrouver.
    */
-  def show(title : String) = Action { implicit request =>
+  def show(title : String) = isAuthenticated {username => implicit request =>
     MovieCompanion.find(title).map(mov =>
       Ok(views.html.movies.details(mov))
     ).getOrElse(NotFound)
@@ -48,7 +48,7 @@ object Application extends Controller {
    * A partir d'un titre de film, récupère les infos dans IMDB
    * @param title  le titre du film
    */
-  def showFromIMDB(title : String) = Action{
+  def showFromIMDB(title : String) = isAuthenticated {username => implicit request =>
     /*
    Voir API IMDB : http://mymovieapi.com/
    http://mymovieapi.com/?title=Drive&type=json&plot=simple&episode=0&limit=2&yg=0&mt=M&lang=en-US&offset=&aka=simple&release=simple&business=0&tech=0
@@ -124,7 +124,7 @@ object Application extends Controller {
    *
    * Parse les lignes du fichier, et récupère les données des films si possible pour les sauvegarder en BDD
    */
-  def charge() = Action{
+  def charge() = isAuthenticated {username => implicit request =>
 
     //  Lit une source ligne par ligne
     def lineEnumerator(source: Source) : Enumerator[String] = {
@@ -147,7 +147,7 @@ object Application extends Controller {
 
         case Array(title, director, actors, year, duration, _)
             => Some(Movie(title, Some(director.split(",").toSeq), Some(actors.split(",").toSeq),
-                    Some(year.toInt), Some(Duration.standardMinutes(duration.toLong)), Some(Seq(Categorie.Action)), None))
+                    Some(year.toInt), Some(Duration.standardMinutes(duration.toLong)), Some(Seq(Categorie.Action)), None, None))
         case _ => println("chargement échoué");None
       }
     )
