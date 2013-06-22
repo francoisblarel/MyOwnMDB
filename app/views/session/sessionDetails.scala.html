@@ -1,0 +1,12 @@
+@(session : VoteSession)
+
+<div>
+    date : @session.date
+
+    selection :
+    <dl>
+        @for(vote <- session.selection){
+            <dt>@vote.user : @vote.movieTitle</dt>
+        }
+    </dl>
+</div>

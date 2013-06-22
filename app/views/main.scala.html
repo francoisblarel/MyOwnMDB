@@ -1,4 +1,4 @@
-@(title: String)(content: Html)(implicit req: RequestHeader, flash : Flash)
+@(title: String)(content: Html)(implicit req: RequestHeader, flash : Flash, session :Session)
 
 <!DOCTYPE html>
 
@@ -17,6 +17,10 @@
             <div class="navbar-inner">
                 <div class="container">
                     <a href="@routes.Application.index()">MyOwnMDB</a>
+                    @if(session.get("userConnected").isDefined){
+                        <span>Bienvenue @session.get("userConnected")</span>
+                        <span><a href="@routes.LoginController.logout">Logout</a></span>
+                    }
                 </div>
             </div>
         </div>
@@ -35,6 +39,10 @@
             }
 
             @content
+
+            <div>
+                <a href="@routes.SessionController.showSession">Voir les votes</a>
+            </div>
         </div>
 
     </body>
