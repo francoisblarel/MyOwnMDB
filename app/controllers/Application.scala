@@ -157,5 +157,27 @@ object Application extends Controller with SecurityTrait {
     Redirect(routes.Application.list())
   }
 
-  
+
+  def upload()= Action(parse.multipartFormData){ request =>
+    request.body.file("moviesFile").map(f => createMoviesFromFile(f.ref.file))
+    Redirect(routes.Application.list())
+  }
+
+  def createMoviesFromFile(f : File){
+    val file = Source.fromFile(f)
+
+    val lineParser : Enumeratee[String, Option[Movie]] = Enumeratee.map(line => {
+      println("ligne : " + line)
+      line.split(";") match{
+
+        case Array(title, director, actors, year, duration, _)
+        => Some(Movie(title, Some(director.split(",").toSeq), Some(actors.split(",").toSeq),
+          Some(year.toInt), Some(Duration.standardMinutes(duration.toLong)), Some(Seq(Categorie.Action)), None))
+        case _ => println("chargement échoué");None
+      }}
+    )
+
+    println("Chargement des nouveaux films...")
+    lineEnumerator(file) &> lineParser run(Iteratee.foreach(mov => MovieCompanion.save(mov.get)))
+  }
 }
