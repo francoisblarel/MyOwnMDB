@@ -13,6 +13,7 @@ GET     /logout                     controllers.LoginController.logout
 #   movies list
 GET     /movies                     controllers.Application.list
 GET     /charge                     controllers.Application.charge
+POST    /upload                     controllers.Application.upload
 GET     /movies/:title              controllers.Application.show(title : String)
 GET     /movies/imdbinfo/:title     controllers.Application.showFromIMDB(title : String)
 
