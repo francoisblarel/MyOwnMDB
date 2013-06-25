@@ -18,6 +18,10 @@ object SessionCompanion{
   def addMovieSelection(user : String, movieTitle : String) = {
     getActiveSession().selection :+ Vote(user,movieTitle)
   }
+  
+   def getSelectionByMovie : Map[String, Seq[(String)]] = {
+    testSession.selection.groupBy(t => t.movieTitle).mapValues(_.map(v => v.user))        
+  }
 
 
 }
