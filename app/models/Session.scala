@@ -19,13 +19,16 @@ object SessionCompanion{
     getActiveSession().selection :+ Vote(user,movieTitle)
   }
   
+  type ResulstatVote = (String, Seq[String])
   /**
    * A partir de la liste des votes de la session, retourne une map avec pour clé le
    * film (groupBy) et pour valeur la liste des votants.
    */
-   def getSelectionByMovie : Map[String, Seq[(String)]] = {
-     // à ameliorer +lisibilité
-    testSession.selection.groupBy(_.movieTitle).mapValues(_.map(v => v.user))        
+  def getSelectionByMovie : List[ResulstatVote] = {
+    val grp : Map[String, Seq[String]] = testSession.selection.groupBy(_.movieTitle).mapValues(_.map(v => v.user))
+    val l = grp.toList.sortWith( (a,b) => a._2.length > b._2.length)
+    println("grp = " + l )
+    l
   }
 
 
