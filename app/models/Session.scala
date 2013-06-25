@@ -19,7 +19,12 @@ object SessionCompanion{
     getActiveSession().selection :+ Vote(user,movieTitle)
   }
   
+  /**
+   * A partir de la liste des votes de la session, retourne une map avec pour clé le
+   * film (groupBy) et pour valeur la liste des votants.
+   */
    def getSelectionByMovie : Map[String, Seq[(String)]] = {
+     // à ameliorer +lisibilité
     testSession.selection.groupBy(t => t.movieTitle).mapValues(_.map(v => v.user))        
   }
 
