@@ -25,7 +25,7 @@ object SessionCompanion{
    */
    def getSelectionByMovie : Map[String, Seq[(String)]] = {
      // à ameliorer +lisibilité
-    testSession.selection.groupBy(t => t.movieTitle).mapValues(_.map(v => v.user))        
+    testSession.selection.groupBy(_.movieTitle).mapValues(_.map(v => v.user))        
   }
 
 
