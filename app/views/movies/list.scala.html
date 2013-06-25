@@ -8,8 +8,13 @@
     <div>
         <dl id="movies">
         @for(movie <- movies){
-            <dt><a href="@routes.Application.show(movie.title)">
-                @movie.title
+            <dt>
+                 <span>
+                    <i title="je veux le voir!" id="bookmark-heart-@movie.title" class="icon-white icon-heart"></i>
+                    <i title="je ne veux pas le voir!" id="bookmark-no-@movie.title" class="icon-white icon-eye-close"></i>
+                </span>
+                <a href="@routes.Application.show(movie.title)">
+                    @movie.title
                 </a>
             </dt>
         }
@@ -22,5 +27,27 @@
             Ajouter un nouveau titre
         </a>
     </div>
+    
+    <div>
+        @helper.form(action=routes.Application.upload, 'enctype -> "multipart/form-data"){
+            <input type="file" name="moviesFile">
+            <input type="submit">
+        }
+    </div>
 
+
+    <script type="text/javascript">
+
+        $("i[id^=bookmark]").click(function(){
+            if($(this).hasClass("icon-white")){
+                // sélectionné
+                $(this).removeClass("icon-white");
+            }else {
+                $(this).addClass("icon-white");
+            }
+        });
+
+        $("#test").tipsy()
+        $("i[id^=bookmark]").tipsy()
+    </script>
 }
