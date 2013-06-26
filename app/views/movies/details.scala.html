@@ -3,14 +3,44 @@
 @main("My Own MDB") {
 
 <div>
-    <div>titre : @movie.title</div>
-    <dl>
-        <dt>année : @movie.year</dt>
-        <dt>directeur : @movie.director</dt>
-        <dt>acteurs : @movie.actors</dt>
-        <dt>durée : @movie.duration</dt>
-        <dt>cat : @movie.categories</dt>
-    </dl>
+    <div>
+        <h2>@movie.title</h2>
+    </div>
+
+    <div class="movieposter">
+        <img id="poster" src=""/>
+    </div>
+
+    <div class="movieinfos">
+        <div>
+            <em>année :</em>
+            <span id="year">@movie.year.getOrElse("inconnue")</span>
+        </div>
+        <div>
+            <em>réalisateur(s) :</em>
+            <span id="directors">@movie.director.getOrElse("inconnu")</span>
+        </div>
+        <div>
+            <em>scénariste(s) :</em>
+            <span id="writer">inconnu</span>
+        </div>
+        <div>
+            <em>acteurs :</em>
+            <span id="actors">@movie.actors.getOrElse("inconnus")</span>
+        </div>
+        <div>
+            <em>durée :</em>
+            <span id="duration">@movie.duration.getOrElse("inconnue")</span>
+        </div>
+        <div>
+            <em>cat :</em>
+            <span id="cat">@movie.categories</span>
+        </div>
+        <div>
+            <em>histoire :</em>
+            <span id="plot">inconnue</span>
+        </div>
+    </div>
 
     <div id="imdbInfos">
     </div>
@@ -21,7 +51,33 @@
 
     <script type="text/javascript">
         $.get("/movies/imdbinfo/@movie.title", function(data) {
-            $('#imdbInfos').html(data);
+            var res = JSON.stringify(data);
+
+            if(data.year != null){
+                $("#year").html(data.year);
+            }
+            if(data.directors != null){
+                $("#directors").html(data.directors);
+            }
+            if(data.actors != null){
+                var acteurs = JSON.stringify(data.actors);
+                $("#actors").html(acteurs);
+            }
+            if(data.writer != null){
+                $("#writer").html(data.writer);
+            }
+            if(data.plot != null){
+                $("#plot").html(data.plot);
+            }
+            if(data.duration != null){
+                $("#duration").html(data.duration);
+            }
+            if(data.poster != null){
+                $("#poster").attr("src",data.poster);
+            }
+
+            $('#imdbInfos').html(res);
+
         });
     </script>
 
