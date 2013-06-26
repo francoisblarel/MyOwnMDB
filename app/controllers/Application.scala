@@ -13,6 +13,8 @@ import play.api.libs.ws.WS
 import models.{MovieIMDB, MovieCompanion, Categorie, Movie}
 import org.joda.time.Duration
 import java.net.{URLEncoder}
+import java.io.File
+import scala.util.Try
 
 
 object Application extends Controller with SecurityTrait {
@@ -120,25 +122,27 @@ object Application extends Controller with SecurityTrait {
     )(MovieIMDB)
 
 
+
+
+  //  Lit une source ligne par ligne
+  def lineEnumerator(source: Source) : Enumerator[String] = {
+    val lines = source.getLines()
+
+    Enumerator.fromCallback1[String] ( _ => {
+      val line = if (lines.hasNext) {
+        Some(lines.next())
+      } else {
+        None
+      }
+      Future.successful(line)
+    })
+  }
+
   /**
    *
    * Parse les lignes du fichier, et récupère les données des films si possible pour les sauvegarder en BDD
    */
   def charge() = isAuthenticated {username => implicit request =>
-
-    //  Lit une source ligne par ligne
-    def lineEnumerator(source: Source) : Enumerator[String] = {
-      val lines = source.getLines()
-
-      Enumerator.fromCallback1[String] ( _ => {
-        val line = if (lines.hasNext) {
-          Some(lines.next())
-        } else {
-          None
-        }
-        Future.successful(line)
-      })
-    }
 
     val file = Source.fromFile(Play.getExistingFile("public/files/movies.txt").get)
 

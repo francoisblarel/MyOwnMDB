@@ -10,7 +10,7 @@ import play.api.libs.json._
 case class Movie(title : String,
                  director : Option[Seq[String]],
                  actors : Option[Seq[String]],
-                 year : Option[Integer],
+                 year : Option[Int],
                  duration : Option[Duration],
                  categories : Option[Seq[Categorie]],
                  imdbId : Option[Integer],

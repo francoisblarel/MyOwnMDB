@@ -54,6 +54,8 @@
         $("i[id^=bookmark]").click(function(){
             if($(this).hasClass("icon-white")){
                 // sélectionné
+                var name = $(this).attr("id").replace('bookmark-heart-','');
+                $.post("/vote/"+name);
                 $(this).removeClass("icon-white");
             }else {
                 $(this).addClass("icon-white");
