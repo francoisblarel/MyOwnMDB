@@ -12,12 +12,16 @@ case class VoteSession(date : DateTime, selection : Seq[Vote])
 object SessionCompanion{
 
   var testSession = VoteSession(Instant.now().toDateTime, Seq(Vote("francois", "Brazil"), Vote("francois","Heat"), Vote("Camille", "Dragons")))
+  var logVotes : List[String] = List("hello")
 
   def getActiveSession() = testSession
 
+
   def addMovieSelection(user : String, movieTitle : String) = {
-    getActiveSession().selection :+ Vote(user,movieTitle)
+    logVotes = logVotes :+ new String(user + " a voté pour le film " + movieTitle)
+    testSession = VoteSession(testSession.date, testSession.selection :+ Vote(user,movieTitle))
   }
+
   
   type ResulstatVote = (String, Seq[String])
   /**
@@ -31,5 +35,10 @@ object SessionCompanion{
     l
   }
 
+  def getNewVotes() : Option[List[String]] = {
+    val tete = if(logVotes.isEmpty) None else Option(logVotes)
+    logVotes = List()
+    tete
+  }
 
 }

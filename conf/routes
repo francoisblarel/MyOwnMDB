@@ -3,23 +3,24 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET      /                           controllers.Application.index
 
 #   authentication
-GET     /login                      controllers.LoginController.login
-POST    /login                      controllers.LoginController.doLogin
-GET     /logout                     controllers.LoginController.logout
+GET      /login                      controllers.LoginController.login
+POST     /login                      controllers.LoginController.doLogin
+GET      /logout                     controllers.LoginController.logout
 
 #   movies list
-GET     /movies                     controllers.Application.list
-GET     /charge                     controllers.Application.charge
-POST    /upload                     controllers.Application.upload
-GET     /movies/:title              controllers.Application.show(title : String)
-GET     /movies/imdbinfo/:title     controllers.Application.showFromIMDB(title : String)
+GET      /movies                     controllers.Application.list
+GET      /charge                     controllers.Application.charge
+POST     /upload                     controllers.Application.upload
+GET      /movies/:title              controllers.Application.show(title : String)
+GET      /movies/imdbinfo/:title     controllers.Application.showFromIMDB(title : String)
 
 #   session
-GET     /session                    controllers.SessionController.showSession
-POST    /vote/:title                controllers.SessionController.vote(title : String)
+GET      /session                    controllers.SessionController.showSession
+POST     /vote/:title                controllers.SessionController.vote(title : String)
+GET      /feed                       controllers.SessionController.feed
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET      /assets/*file               controllers.Assets.at(path="/public", file)

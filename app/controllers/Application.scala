@@ -97,7 +97,7 @@ object Application extends Controller with SecurityTrait {
 //    }
 
     Async{
-        movies.map(x => Ok(views.html.movies.imdbDetails(x.get)))
+        movies.map(x => Ok(Json.toJson(x.get)))
     }
 
   }
@@ -120,6 +120,21 @@ object Application extends Controller with SecurityTrait {
       ( __ \ "year").readNullable[Long] and
       ( __ \ "also_known_as").readNullable[Seq[String]]
     )(MovieIMDB)
+
+
+  implicit val movieIMDBWrite : Writes[MovieIMDB] = (
+      ( __ \ "title").write[String] and
+      ( __ \ "duration").write[Option[Seq[String]]] and
+      ( __ \ "poster").write[Option[String]] and
+      ( __ \ "imdbUrl").write[String] and
+      ( __ \ "directors").write[Option[Seq[String]]] and
+      ( __ \ "writer").write[Option[Seq[String]]] and
+      ( __ \ "id").write[String] and
+      ( __ \ "actors").write[Option[Seq[String]]] and
+      ( __ \ "plot").write[Option[String]] and
+      ( __ \ "year").write[Option[Long]] and
+      ( __ \ "otherTitles").write[Option[Seq[String]]]
+    )(unlift(MovieIMDB.unapply _))
 
 
 
