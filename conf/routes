@@ -20,6 +20,7 @@ GET      /movies/imdbinfo/:title     controllers.Application.showFromIMDB(title 
 #   session
 GET      /session                    controllers.SessionController.showSession
 POST     /vote/:title                controllers.SessionController.vote(title : String)
+POST     /unvote/:title                controllers.SessionController.unvote(title : String)
 GET      /feed                       controllers.SessionController.feed
 
 # Map static resources from the /public folder to the /assets URL path

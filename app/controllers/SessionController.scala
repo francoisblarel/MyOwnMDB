@@ -27,13 +27,21 @@ object SessionController extends Controller with SecurityTrait{
     Ok
   }
 
+
+  def unvote(movie : String) = isAuthenticated{ username => implicit request =>
+    println(username + " a retiré son vote pour le film : " + movie)
+    SessionCompanion.removeMovieSelection(username, movie)
+    Ok
+  }
+
+
   def feed() = Action{
 
     val b : Enumerator[List[String]]= Enumerator.generateM(
       Promise.timeout(SessionCompanion.getNewVotes().orElse(Option(List())) ,2000)
     )
 
-    val transformer : Enumeratee[List[String], String] = Enumeratee.map( l => if(l.isEmpty) "" else l.foldLeft("")(_ + " \n " + _) )
+    val transformer : Enumeratee[List[String], String] = Enumeratee.map( l => if(l.isEmpty) "".mkString else l.foldLeft("")(_ + " \n " + _) )
 
     Ok.feed(b &> transformer &> EventSource()).as("text/event-stream")
   }

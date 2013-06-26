@@ -16,12 +16,12 @@ $(function() {
         feed.addEventListener('message', function(e){
             var data = e.data;
             if(data != ''){
-                $("#voteEvents").html(data);
+                $("#voteEvents").append("<div>"+ data +"</div>");
             }
         },false);
 
         feed.addEventListener('error', function(e){
-            alert(e)
+            //
         },false);
 
     }else{

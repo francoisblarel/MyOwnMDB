@@ -18,8 +18,13 @@ object SessionCompanion{
 
 
   def addMovieSelection(user : String, movieTitle : String) = {
-    logVotes = logVotes :+ new String(user + " a voté pour le film " + movieTitle)
+    logVotes = logVotes :+ new String(Instant.now().toDateTime.toString("dd/MM hh:mm:ss")+ " : "+user + " a voté pour le film " + movieTitle)
     testSession = VoteSession(testSession.date, testSession.selection :+ Vote(user,movieTitle))
+  }
+
+  def removeMovieSelection(user : String, movieTitle : String) = {
+    logVotes = logVotes :+ new String(Instant.now().toDateTime.toString("dd/MM hh:mm:ss")+ " : "+user + " a retiré son vote pour le film " + movieTitle)
+    testSession = VoteSession(testSession.date, testSession.selection.filterNot(_.equals(Vote(user,movieTitle))))
   }
 
   

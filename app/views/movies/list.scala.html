@@ -19,8 +19,8 @@
                 <tr>
                     <td>
                         <span>
-                            <i title="je veux le voir!" id="bookmark-heart-@movie.title" class="icon-white icon-heart"></i>
-                            <i title="je ne veux pas le voir!" id="bookmark-no-@movie.title" class="icon-white icon-eye-close"></i>
+                            <button class="btn btn-primary"><i title="je veux le voir!" id="bookmark-heart-@movie.title" class="icon-white icon-heart"></i></button>
+                            <button class="btn btn-primary"><i title="je ne veux pas le voir!" id="bookmark-no-@movie.title" class="icon-white icon-eye-close"></i></button>
                         </span>
                     </td>
                     <td>
@@ -52,12 +52,13 @@
     <script type="text/javascript">
 
         $("i[id^=bookmark]").click(function(){
+            var name = $(this).attr("id").replace('bookmark-heart-','');
             if($(this).hasClass("icon-white")){
                 // sélectionné
-                var name = $(this).attr("id").replace('bookmark-heart-','');
                 $.post("/vote/"+name);
                 $(this).removeClass("icon-white");
             }else {
+                $.post("/unvote/"+name);
                 $(this).addClass("icon-white");
             }
         });
