@@ -168,11 +168,20 @@ object Application extends Controller with SecurityTrait {
 
     val lineParser : Enumeratee[String, Option[Movie]] = Enumeratee.map(line => {
       println("ligne : " + line)
-      line.split(";") match{
+      line.replaceAll("\"","").split(";") match{
 
-        case Array(title, director, actors, year, duration, _)
-        => Some(Movie(title, Some(director.split(",").toSeq), Some(actors.split(",").toSeq),
-          Some(year.toInt), Some(Duration.standardMinutes(duration.toLong)), Some(Seq(Categorie.Action)), None))
+          case a @ Array(title, _*) => Some( Movie(title,
+                                                     Try(a(1).split(",").toSeq).toOption, //directors
+                                                     Try(a(2).split(",").toSeq).toOption, //actors
+                                                     Try(a(3).toInt).toOption, //year
+                                                     Try(Duration.standardMinutes(a(4).toLong)).toOption, //duration
+                                                     Option(Seq(Categorie.Action)), //category
+                                                     None, //
+                                                     None)
+                                                    )
+       // case Array(title, director, actors, year, duration, _)
+        //=> Some(Movie(title, Some(director.split(",").toSeq), Some(actors.split(",").toSeq),
+//          Some(year.toInt), Some(Duration.standardMinutes(duration.toLong)), Some(Seq(Categorie.Action)), None))
         case _ => println("chargement échoué");None
       }}
     )
