@@ -7,7 +7,7 @@ import play.api.libs.concurrent.Promise
 import scala.concurrent.ExecutionContext
 import ExecutionContext.Implicits.global
 import play.api.libs.EventSource
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 
 /**
  * User: francois
@@ -41,9 +41,9 @@ object SessionController extends Controller with SecurityTrait{
       Promise.timeout(SessionCompanion.getNewVotes().orElse(Option(List())) ,2000)
     )
 
-    val transformer : Enumeratee[List[String], String] = Enumeratee.map( l => if(l.isEmpty) "".mkString else l.foldLeft("")(_ + " \n " + _) )
+    val asJson : Enumeratee[List[String], JsValue] = Enumeratee.map( l => Json.toJson(l))
 
-    Ok.feed(b &> transformer &> EventSource()).as("text/event-stream")
+    Ok.feed(b &> asJson &> EventSource()).as("text/event-stream")
   }
 
 }
