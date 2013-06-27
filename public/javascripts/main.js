@@ -15,9 +15,11 @@ $(function() {
 
         feed.addEventListener('message', function(e){
             var data = e.data;
-            if(data != ''){
-                $("#voteEvents").append("<div>"+ data +"</div>");
-            }
+            var json = $.parseJSON(data);
+
+            $.each(json, function(key, value){
+                $("#voteEvents").append("<div>"+ value +"</div>");
+            });
         },false);
 
         feed.addEventListener('error', function(e){
