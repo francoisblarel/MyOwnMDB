@@ -183,7 +183,7 @@ object Application extends Controller with SecurityTrait {
   }
 
   def createMoviesFromFile(f : File){
-    val file = Source.fromFile(f)
+    val file = Source.fromFile(f)(scala.io.Codec.ISO8859)
 
     val lineParser : Enumeratee[String, Option[Movie]] = Enumeratee.map(line => {
       println("ligne : " + line)
