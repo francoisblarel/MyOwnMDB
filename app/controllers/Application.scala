@@ -11,6 +11,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.ws.WS
 import models._
 import models.MovieCompanion._
+import models.MovieFormat._
 import org.joda.time.Duration
 import java.net.{URLEncoder}
 import java.io.File
@@ -108,29 +109,6 @@ object Application extends Controller with SecurityTrait {
     })
   }
 
-  /**
-   *
-   * Parse les lignes du fichier, et récupère les données des films si possible pour les sauvegarder en BDD
-   */
-  def charge() = isAuthenticated {username => implicit request =>
-
-    val file = Source.fromFile(Play.getExistingFile("public/files/movies.txt").get)
-
-    val lineParser : Enumeratee[String, Option[Movie]] = Enumeratee.map(line =>
-      line.split(";") match{
-
-        case Array(title, director, actors, year, duration, _)
-            => Some(Movie(title, Some(director.split(",").toSeq), Some(actors.split(",").toSeq),
-                    Some(year.toInt), Some(Duration.standardMinutes(duration.toLong)), Some(Seq(Categorie.Action)), None, None))
-        case _ => println("chargement échoué");None
-      }
-    )
-
-    println("Chargement des nouveaux films...")
-    lineEnumerator(file) &> lineParser run(Iteratee.foreach(mov => MovieCompanion.save(mov.get)))
-    Redirect(routes.Application.list())
-  }
-
 
   /**
    * Upload un csv afin de pouvoir ajouter son contenu en base.
@@ -147,7 +125,7 @@ object Application extends Controller with SecurityTrait {
    * @param f : le fichier contenant la liste des films à ajouter
    */
   def createMoviesFromFile(f : File){
-    val file = Source.fromFile(f)(scala.io.Codec.ISO8859)
+    val file = Source.fromFile(f)(scala.io.Codec.UTF8)
 
     val lineParser : Enumeratee[String, Option[Movie]] = Enumeratee.map(line => {
       println("ligne : " + line)
@@ -160,7 +138,7 @@ object Application extends Controller with SecurityTrait {
                                                      Try(Duration.standardMinutes(a(4).toLong)).toOption, //duration
                                                      Option(Seq(Categorie.Action)), //category
                                                      None, //
-                                                     None)
+                                                     Some(DVD)) //par défaut DVD
                                                     )
        // case Array(title, director, actors, year, duration, _)
         //=> Some(Movie(title, Some(director.split(",").toSeq), Some(actors.split(",").toSeq),
@@ -172,4 +150,33 @@ object Application extends Controller with SecurityTrait {
     println("Chargement des nouveaux films...")
     lineEnumerator(file) &> lineParser run(Iteratee.foreach(mov => MovieCompanion.save(mov.get)))
   }
+
+
+
+  /**
+   * Fonction temporaire : test de l'upload de films
+   * Parse les lignes du fichier, et récupère les données des films si possible pour les sauvegarder en BDD
+   */
+  def charge() = isAuthenticated {username => implicit request =>
+
+    val file = Source.fromFile(Play.getExistingFile("public/files/movies.txt").get)
+
+    val lineParser : Enumeratee[String, Option[Movie]] = Enumeratee.map(line =>
+      line.split(";") match{
+
+        case Array(title, director, actors, year, duration, _)
+        => Some(Movie(title, Some(director.split(",").toSeq), Some(actors.split(",").toSeq),
+          Some(year.toInt), Some(Duration.standardMinutes(duration.toLong)), Some(Seq(Categorie.Action)), None, None))
+        case _ => println("chargement échoué");None
+      }
+    )
+
+    println("Chargement des nouveaux films...")
+    lineEnumerator(file) &> lineParser run(Iteratee.foreach(mov => MovieCompanion.save(mov.get)))
+    Redirect(routes.Application.list())
+  }
+
+
+
+
 }
