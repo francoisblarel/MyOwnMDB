@@ -17,17 +17,30 @@ object SessionController extends Controller with SecurityTrait{
 
   //val logVotes = Enumerator[String]
 
+  /**
+   * Retourne les infos de la session active.
+   * @return
+   */
   def showSession() = isAuthenticated{ username => implicit request =>
     Ok(views.html.session.sessionDetails(SessionCompanion.getActiveSession()))
   }
 
+  /**
+   * Vote pour un film.
+   * @param movie
+   * @return
+   */
   def vote(movie : String) = isAuthenticated{ username => implicit request =>
     println(username + " a voté pour le film : " + movie)
     SessionCompanion.addMovieSelection(username, movie)
     Ok
   }
 
-
+  /**
+   * Annule un vote.
+   * @param movie
+   * @return
+   */
   def unvote(movie : String) = isAuthenticated{ username => implicit request =>
     println(username + " a retiré son vote pour le film : " + movie)
     SessionCompanion.removeMovieSelection(username, movie)
@@ -35,6 +48,10 @@ object SessionController extends Controller with SecurityTrait{
   }
 
 
+  /**
+   * Envoi en direct les derniers votes effectués.
+   * @return
+   */
   def feed() = Action{
 
     val b : Enumerator[List[String]]= Enumerator.generateM(

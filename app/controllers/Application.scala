@@ -22,6 +22,10 @@ import models.Movie
 
 object Application extends Controller with SecurityTrait {
 
+  /**
+   * Accueil du site
+   * @return
+   */
   def index = isAuthenticated {username =>  implicit request =>
     Redirect(routes.Application.list())
   }
@@ -86,12 +90,11 @@ object Application extends Controller with SecurityTrait {
   }
 
 
-
-
-
-
-
-  //  Lit une source ligne par ligne
+   /** Lit une source ligne par ligne
+    * et génére un enumerator
+    * @param source
+    * @return
+    */
   def lineEnumerator(source: Source) : Enumerator[String] = {
     val lines = source.getLines()
 
@@ -129,11 +132,20 @@ object Application extends Controller with SecurityTrait {
   }
 
 
+  /**
+   * Upload un csv afin de pouvoir ajouter son contenu en base.
+   * @return
+   */
   def upload()= Action(parse.multipartFormData){ request =>
     request.body.file("moviesFile").map(f => createMoviesFromFile(f.ref.file))
     Redirect(routes.Application.list())
   }
 
+
+  /**
+   * Ajoute en base de donnée un ensemble de films qui se trouvent dans un fichier csv.
+   * @param f : le fichier contenant la liste des films à ajouter
+   */
   def createMoviesFromFile(f : File){
     val file = Source.fromFile(f)(scala.io.Codec.ISO8859)
 

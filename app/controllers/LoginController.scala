@@ -22,12 +22,20 @@ object LoginController extends Controller {
     )(User.apply)(User.unapply).verifying("login.validation.user.password.invalid", UserCompanion.checkPassword(_))
   )
 
+  /**
+   * Redirige vers la page de login
+   * @return
+   */
   def login = Action{ implicit request =>
   // val theForm = loginForm.bind(flash.data)
     Ok(views.html.authenticate(loginForm))
   }
 
 
+  /**
+   * Loggue un utilisateur.
+   * @return
+   */
   def doLogin() = Action{ implicit request =>
     this.loginForm.bindFromRequest().fold(
       hasErrors = {
@@ -50,7 +58,10 @@ object LoginController extends Controller {
     )
   }
 
-
+  /**
+   * Déconnecte un utilisateur.
+   * @return
+   */
   def logout = Action{
     Redirect(routes.LoginController.login()).withNewSession
   }

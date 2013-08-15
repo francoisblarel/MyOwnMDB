@@ -11,11 +11,25 @@ import play.api.mvc.Security._
  */
 trait SecurityTrait {
 
-  //in a Security trait
+  /**
+   * Récupère l'utilisateur en session
+   * @param request
+   * @return
+   */
   def username(request: RequestHeader) = request.session.get("userConnected")
 
+  /**
+   * Si on n'est pas loggué, on redirige vers la page de login
+   * @param request
+   * @return
+   */
   def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.LoginController.login)
 
+  /**
+   * Action qui vérifie que l'utilisateur est bien connecté.
+   * @param f
+   * @return
+   */
   def isAuthenticated(f: => String => Request[AnyContent] => Result) = {
     Authenticated(username, onUnauthorized) { user =>
       Action(request => f(user)(request))
